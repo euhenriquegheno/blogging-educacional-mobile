@@ -25,6 +25,8 @@ npm run typecheck        # tsc --noEmit
 
 Para criar a primeira conta de Administrador use `npm run seed:admin` no repositório do backend.
 
+> Documentação completa da entrega (arquitetura, guia de uso, testes e relato de experiências): [docs/DOCUMENTACAO.md](docs/DOCUMENTACAO.md).
+
 ## Funcionalidades x requisitos
 
 | Requisito | Tela |

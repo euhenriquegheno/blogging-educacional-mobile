@@ -61,7 +61,7 @@ http.interceptors.response.use(
       throw new ApiError(
         code === 'ECONNABORTED'
           ? 'O servidor demorou demais para responder. Tente novamente.'
-          : 'Não foi possível conectar ao servidor. Verifique sua conexão.',
+          : `Não foi possível conectar ao servidor (${API_URL}). Verifique a conexão e a URL da API.`,
         0,
       )
     }

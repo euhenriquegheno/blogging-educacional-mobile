@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Documentação — App Mobile do Blogging Educacional</title>
+<style>
+:root {
+  --bg:#f4f5fb; --surface:#fff; --text:#1f2937; --muted:#6b7280; --border:#d9dcec;
+  --primary:#3730a3; --primary-soft:#e0e7ff; --code-bg:#eef0fa; --warn-bg:#fef3c7;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#10112a; --surface:#181a3a; --text:#e5e7f5; --muted:#9aa0c0; --border:#2e3160;
+           --primary:#a5b4fc; --primary-soft:#27296a; --code-bg:#20224a; --warn-bg:#4a3b10; }
+}
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--text);
+  font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+header.hero { background:var(--primary); color:#fff; padding:32px 16px; }
+@media (prefers-color-scheme: dark) { header.hero { background:#312e81; } }
+.hero-inner, main { max-width:860px; margin:0 auto; }
+.hero-inner { display:flex; align-items:center; gap:16px; }
+.logo { width:56px; height:56px; border-radius:18px; background:#fff; display:grid; place-items:center; flex:none; }
+.hero h1 { margin:0; font-size:1.5rem; line-height:1.2; }
+.hero p { margin:4px 0 0; color:#c7d2fe; font-size:.95rem; }
+main { padding:24px 16px 64px; }
+main > h1:first-child { display:none; }
+h2 { margin-top:2.4rem; padding-bottom:.3rem; border-bottom:2px solid var(--primary-soft); color:var(--primary); }
+h3 { margin-top:1.8rem; }
+a { color:var(--primary); }
+code { background:var(--code-bg); padding:.1em .35em; border-radius:6px; font:0.88em ui-monospace,Consolas,monospace; }
+pre { background:var(--code-bg); padding:14px 16px; border-radius:12px; overflow-x:auto; border:1px solid var(--border); }
+pre code { background:none; padding:0; }
+.table-wrap { overflow-x:auto; margin:1rem 0; border:1px solid var(--border); border-radius:12px; background:var(--surface); }
+table { border-collapse:collapse; width:100%; font-size:.93rem; }
+th, td { text-align:left; padding:10px 12px; border-bottom:1px solid var(--border); vertical-align:top; }
+th { background:var(--primary-soft); color:var(--primary); }
+tr:last-child td { border-bottom:none; }
+blockquote { margin:1rem 0; padding:12px 16px; background:var(--warn-bg); border-left:4px solid #d97706; border-radius:8px; }
+blockquote p { margin:0; }
+li { margin:.35rem 0; }
+footer { text-align:center; color:var(--muted); font-size:.85rem; padding:24px 16px 40px; }
+@media print { header.hero { background:none; color:#000; } .hero p { color:#444; } body { background:#fff; } }
+</style>
+</head>
+<body>
+<header class="hero"><div class="hero-inner">
+  <div class="logo" aria-hidden="true">
+    <svg viewBox="0 0 64 64" width="38" height="38"><g fill="#3730a3">
+      <polygon points="32,12 58,25 32,38 6,25"/>
+      <polygon points="17,33 32,40 47,33 47,45 32,52 17,45"/>
+      <rect x="53" y="26" width="2.4" height="17"/><circle cx="54.2" cy="45" r="3"/></g></svg>
+  </div>
+  <div><h1>Blogging Educacional — App Mobile</h1><p>Documentação da entrega: arquitetura, uso e relato de experiências</p></div>
+</div></header>
+<main>
+<h1 id="documentacao-do-projeto-app-mobile-do-blogging-educacional">Documentação do Projeto — App Mobile do Blogging Educacional</h1>
+<h2 id="1-visao-geral">1. Visão geral</h2>
+<p>O <strong>Blogging Educacional</strong> é um blog institucional onde professores publicam
+materiais para a comunidade acadêmica. A API REST (Fastify + TypeORM + MySQL,
+com autenticação JWT) e a interface web (React) já estavam concluídas. Esta
+etapa entrega o <strong>aplicativo mobile</strong>, desenvolvido em <strong>React Native
+(Expo + TypeScript)</strong>, que consome a mesma API e atende a três perfis:</p>
+<ul>
+<li><strong>Aluno</strong>: lê, busca e comenta nas postagens.</li>
+<li><strong>Professor</strong>: além disso, cria e edita as próprias postagens e gerencia
+  contas de professores e alunos.</li>
+<li><strong>Administrador</strong>: acesso total (qualquer postagem e qualquer conta).</li>
+</ul>
+<p>Visitantes (sem login) podem ler e buscar postagens.</p>
+<h3 id="11-requisitos-atendidos">1.1 Requisitos atendidos</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Requisito</th>
+<th>Tela / componente</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Lista de posts (título, autor, resumo) com busca por palavra-chave</td>
+<td><code>PostsListScreen</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Leitura do post e comentários</td>
+<td><code>PostDetailScreen</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Criação de post (título, conteúdo, autor)</td>
+<td><code>PostFormScreen</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td>Edição de post com dados carregados</td>
+<td><code>PostFormScreen</code> (com <code>id</code>)</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Cadastro de professores</td>
+<td><code>UsuarioFormScreen</code> (tipo Professor)</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Edição de professores</td>
+<td><code>UsuarioFormScreen</code> (com <code>id</code>)</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Listagem paginada de professores com editar/excluir</td>
+<td><code>UsuariosListScreen</code> (tipo Professor)</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Mesmas telas (5, 6 e 7) para alunos</td>
+<td><code>UsuariosListScreen</code> / <code>UsuarioFormScreen</code> (tipo Aluno)</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Administração de postagens (editar/excluir)</td>
+<td><code>AdminPostsScreen</code></td>
+</tr>
+<tr>
+<td>10</td>
+<td>Login e autorização</td>
+<td><code>AccountScreen</code>, <code>AuthProvider</code>, <code>RequireManager</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>Requisitos técnicos: React Native com hooks e componentes funcionais; Context
+API para a sessão; consumo da API com <strong>Axios</strong>; estilização própria
+(tema em <code>src/theme</code>); documentação neste arquivo e no <code>README.md</code>.</p>
+<h2 id="2-arquitetura">2. Arquitetura</h2>
+<h3 id="21-visao-em-camadas">2.1 Visão em camadas</h3>
+<pre><code>Tela (screens/) ─► módulo de API da feature (features/*-api.ts)
+                     ─► cliente HTTP (services/api-client.ts, Axios)
+                          ─► API REST
+</code></pre>
+<ul>
+<li><strong>Screens</strong> (<code>src/screens</code>): uma tela por requisito. Cuidam apenas de
+  estado de interface, validação de formulário e navegação.</li>
+<li><strong>Features</strong> (<code>src/features</code>): <code>auth</code> (contexto de sessão, JWT,
+  permissões), <code>posts</code> (posts e comentários) e <code>usuarios</code> (contas). Cada uma
+  expõe funções de API tipadas (<code>listPosts</code>, <code>createUsuario</code>, ...).</li>
+<li><strong>Services</strong> (<code>src/services</code>): <code>api-client.ts</code> (Axios) e <code>token-storage.ts</code>
+  (armazenamento seguro do token).</li>
+<li><strong>Components</strong> (<code>src/components</code>): blocos reutilizáveis (<code>Button</code>,
+  <code>TextField</code>, <code>Card</code>, <code>PostCard</code>, <code>Pagination</code>, <code>RequireManager</code>, <code>Brand</code>...).</li>
+<li><strong>Hooks</strong> (<code>src/hooks</code>): <code>useFocusRequest</code> carrega dados quando a tela
+  ganha foco, descarta respostas obsoletas e mantém o dado anterior
+  enquanto recarrega.</li>
+<li><strong>Navigation</strong> (<code>src/navigation</code>): <em>Bottom Tabs</em> (Postagens, Administração,
+  Conta) dentro de um <em>Native Stack</em> (detalhe, formulários e listas).</li>
+<li><strong>Types</strong> (<code>src/types</code>): tipos de domínio e o enum <code>TipoUsuario</code>
+  (<code>ADMINISTRADOR = 1</code>, <code>PROFESSOR = 2</code>, <code>ALUNO = 3</code>), o mesmo do backend.</li>
+</ul>
+<h3 id="22-cliente-http-axios">2.2 Cliente HTTP (Axios)</h3>
+<p>O <code>api-client.ts</code> cria uma instância Axios (<code>baseURL</code> vinda de
+<code>EXPO_PUBLIC_API_URL</code>, timeout de 15 s) com dois interceptors:</p>
+<ul>
+<li><strong>Requisição</strong>: injeta <code>Authorization: Bearer &lt;token&gt;</code> quando há sessão.</li>
+<li><strong>Resposta</strong>: converte qualquer falha em <code>ApiError</code> (com <code>status</code> e a
+  mensagem enviada pela API), traduz falhas de rede/timeout em mensagens
+  claras (incluindo a URL tentada, o que facilita diagnosticar problemas de
+  configuração) e, em <strong>401 com token</strong>, encerra a sessão automaticamente.
+  Um 401 sem token (login com senha errada) <strong>não</strong> derruba a sessão.</li>
+</ul>
+<p>As telas e os módulos <code>*-api.ts</code> dependem só da função <code>apiClient</code>, sem
+conhecer o Axios; a troca de <code>fetch</code> para Axios alterou apenas esse arquivo.</p>
+<h3 id="23-autenticacao-e-autorizacao">2.3 Autenticação e autorização</h3>
+<ul>
+<li><code>POST /login</code> devolve um JWT (<code>sub</code>, <code>tipo</code>, validade de <strong>24 h</strong>). O app
+  decodifica o payload para saber o perfil. A decodificação é feita com um
+  decodificador base64 próprio, sem depender de <code>atob</code>/<code>Buffer</code> no Hermes.</li>
+<li>O token é mantido em memória (lido pelo interceptor) e persistido no
+  <strong><code>expo-secure-store</code></strong>. Ao abrir o app, o token salvo é descartado se
+  estiver expirado (<code>exp</code>); caso contrário a sessão é restaurada.</li>
+<li>O estado de sessão fica no <code>AuthContext</code> (Context API), exposto por
+  <code>useAuth()</code> com <code>user</code>, <code>signIn</code> e <code>signOut</code>.</li>
+<li><strong>Guarda de acesso</strong>: <code>RequireManager</code> envolve as telas de criação, edição
+  e administração. Sem token, pede login; com perfil Aluno, mostra "Acesso
+  restrito". A aba <strong>Administração</strong> só existe na barra inferior para
+  Professor e Administrador autenticados.</li>
+<li><strong>Regras de posse</strong>: Professor edita/exclui apenas as próprias postagens
+  (<code>canModifyPost</code>); Administrador, qualquer uma. Professor gerencia
+  professores e alunos, <strong>nunca</strong> contas de Administrador.</li>
+<li>A <strong>fonte da verdade é o backend</strong>: as guardas do app melhoram a
+  experiência, mas a API rejeita com 401/403 mesmo se o app for adulterado.</li>
+</ul>
+<h3 id="24-mudancas-feitas-no-backend-para-suportar-o-app">2.4 Mudanças feitas no backend para suportar o app</h3>
+<p>A API original não cobria três necessidades da atividade; foram feitas estas
+alterações (com testes), seguindo o que o projeto já havia decidido:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Mudança</th>
+<th>Motivo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POST /posts</code> e <code>PUT /posts/:id</code> aceitam <code>autorId</code> opcional (padrão: usuário logado; o autor deve ser Professor ou Administrador, senão <code>400</code>)</td>
+<td>O formulário de postagem precisa do campo <strong>autor</strong></td>
+</tr>
+<tr>
+<td>Rotas <code>/user</code> passam a aceitar Professor, com regra nos casos de uso que o impede de criar, ver, editar, promover ou excluir contas de Administrador</td>
+<td>Professor cadastra e edita professores e alunos</td>
+</tr>
+<tr>
+<td><code>GET /user?tipo=2|3</code> filtra por tipo</td>
+<td>Listagens paginadas separadas de professores e alunos</td>
+</tr>
+<tr>
+<td><code>PUT /user/:id</code> com schema próprio, <code>senha</code> opcional</td>
+<td>Editar um cadastro sem trocar a senha</td>
+</tr>
+<tr>
+<td>Erros de validação do Fastify respondem <code>400</code> (antes <code>500</code>)</td>
+<td>Mensagens corretas no app</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="25-paginacao-e-busca">2.5 Paginação e busca</h3>
+<p>A API devolve arrays sem o total de registros. O app considera que existe
+próxima página quando a página atual veio cheia (<code>PAGE_SIZE = 10</code>). A busca
+(<code>/posts/search</code>) usa <em>debounce</em> de 400 ms e não é paginada, pois a API não
+oferece paginação nesse endpoint.</p>
+<h3 id="26-estrutura-de-pastas">2.6 Estrutura de pastas</h3>
+<pre><code>├── App.tsx                       # Providers: SafeArea → Auth → Navigation
+├── app.json                      # Nome, ícone, splash e plugins do Expo
+├── assets/                       # Ícone, splash e favicon
+├── docs/DOCUMENTACAO.md          # Este documento
+└── src/
+    ├── config/env.ts             # URL da API e tamanho da página
+    ├── services/                 # api-client (Axios), token-storage
+    ├── features/{auth,posts,usuarios}/
+    ├── hooks/use-focus-request.ts
+    ├── navigation/               # root-navigator, types
+    ├── screens/                  # Telas
+    ├── components/               # Componentes compartilhados
+    ├── theme/                    # Cores e espaçamentos
+    └── types/                    # Tipos de domínio
+</code></pre>
+<h3 id="27-identidade-visual">2.7 Identidade visual</h3>
+<p>O app tem logo própria (selo com capelo de formatura) usada no cabeçalho da
+tela inicial, em um banner de boas-vindas, no ícone do aplicativo e na
+splash. A paleta usa um azul-índigo (<code>#3730A3</code>) como cor principal; a barra
+inferior usa ícones (Ionicons) e a navegação respeita o perfil do usuário.</p>
+<h2 id="3-guia-de-uso">3. Guia de uso</h2>
+<h3 id="31-executando-o-projeto">3.1 Executando o projeto</h3>
+<p>Pré-requisitos: Node 20+, o <strong>backend</strong> rodando (veja o repositório do
+backend) e o app <strong>Expo Go</strong> no celular, ou um emulador.</p>
+<pre><code class="language-bash">npm ci
+cp .env.example .env     # defina EXPO_PUBLIC_API_URL
+npm start                # escaneie o QR code com o Expo Go
+</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Ambiente</th>
+<th><code>EXPO_PUBLIC_API_URL</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Emulador Android</td>
+<td><code>http://10.0.2.2:3000</code></td>
+</tr>
+<tr>
+<td>Simulador iOS</td>
+<td><code>http://localhost:3000</code></td>
+</tr>
+<tr>
+<td>Celular físico (Expo Go)</td>
+<td><code>http://&lt;IP-do-computador&gt;:3000</code> (mesmo Wi-Fi)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Se o app não conectar: confirme o IP com <code>ipconfig</code>, libere a porta 3000 no
+firewall e reinicie com <code>npm start -- --clear</code> (as variáveis <code>EXPO_PUBLIC_*</code>
+são lidas na hora do bundle). Para validar a rede, abra
+<code>http://&lt;IP&gt;:3000/posts</code> no navegador do celular.</p>
+<p>Para criar a primeira conta de Administrador, use <code>npm run seed:admin</code> no
+repositório do backend.</p>
+<h3 id="32-fluxos-por-perfil">3.2 Fluxos por perfil</h3>
+<ul>
+<li><strong>Visitante</strong>: na aba <em>Postagens</em> vê a lista (título, autor e resumo),
+  busca por palavra-chave, navega entre páginas e abre uma postagem para
+  ler o conteúdo completo e os comentários. Não vê o campo de comentário.</li>
+<li><strong>Aluno</strong>: faz login na aba <em>Conta</em> e passa a comentar em qualquer
+  postagem. Não vê a aba <em>Administração</em> nem botões de edição.</li>
+<li><strong>Professor</strong>: vê o botão <strong>Nova</strong> na lista e a aba <em>Administração</em>.</li>
+<li><em>Nova postagem</em>: informa título, conteúdo e escolhe o autor (padrão: ele
+    mesmo; a lista traz os professores).</li>
+<li><em>Editar</em>: disponível apenas nas próprias postagens (na tela de leitura
+    e em <em>Gerenciar postagens</em>); o formulário carrega os dados atuais.</li>
+<li><em>Professores</em> e <em>Alunos</em>: listagem paginada com <strong>Editar</strong> e <strong>Excluir</strong>
+    (com confirmação) e botão de cadastro. Na edição, a senha é opcional.</li>
+<li><strong>Administrador</strong>: tudo o que o professor faz, mas sobre qualquer
+  postagem e qualquer conta.</li>
+</ul>
+<p>Não há auto-cadastro nem recuperação de senha: as contas são criadas por
+professores ou administradores. O conteúdo das postagens é texto simples
+(sem editor rico) e não há upload de imagens.</p>
+<h2 id="4-testes-e-integracao-continua">4. Testes e integração contínua</h2>
+<ul>
+<li><strong>Testes do app</strong> (Jest + <code>jest-expo</code> + Testing Library, 18 testes):</li>
+<li><code>api-client</code>: injeção do token, query, corpo JSON, resposta 204,
+    tratamento de 401 (com e sem token), 400 e falha de rede, usando um
+    adaptador falso do Axios que exercita os interceptors reais.</li>
+<li><code>jwt</code>: extração de perfil e detecção de expiração.</li>
+<li><code>permissions</code>: regras de posse de postagem e de gestão por perfil.</li>
+<li><code>validation</code> (cadastro de usuário), <code>excerpt</code> (resumo) e <code>PostCard</code>.</li>
+<li><strong>Backend</strong>: os testes das mudanças (autor da postagem, gestão de contas
+  por professor, corpo do <code>PUT /user</code> sem senha) estão no repositório do
+  backend.</li>
+<li><strong>Verificações manuais</strong>: o app foi executado em celular físico via Expo
+  Go contra a API real. <CONFIRMAR: fluxos testados por perfil></li>
+<li><strong>CI</strong> (<code>.github/workflows/ci.yml</code>): a cada push na <code>main</code> e pull request,
+  instala dependências, roda <code>typecheck</code>, os testes e gera o bundle Android
+  (<code>expo export</code>) para garantir que o app compila.</li>
+</ul>
+<pre><code class="language-bash">npm run typecheck
+npm test
+</code></pre>
+<h2 id="5-relato-de-experiencias-e-desafios">5. Relato de experiências e desafios</h2>
+<blockquote>
+<p>Este relato descreve os desafios técnicos encontrados durante o
+desenvolvimento do app. A equipe deve complementá-lo com as próprias
+impressões (divisão de tarefas, aprendizados pessoais).</p>
+</blockquote>
+<ul>
+<li><strong>A API não estava pronta para o mobile.</strong> Ao mapear os requisitos contra
+  os endpoints, apareceram lacunas: <code>/user</code> aceitava só Administrador (a
+  atividade pede que professores cadastrem professores e alunos), a criação
+  de postagem não recebia o autor e não havia filtro por tipo de usuário para
+  as listagens. Resolvemos no backend, com a regra "professor nunca
+  gerencia Administrador" nos <strong>casos de uso</strong>, e não só nas rotas, para que
+  valesse para qualquer cliente.</li>
+<li><strong>Edição de cadastro sem senha.</strong> Salvar um professor sem preencher a
+  senha retornava <em>Internal Server Error</em>. O controller já tratava a senha
+  como opcional, mas o schema de validação do <code>PUT</code> era o mesmo do <code>POST</code> e a
+  exigia; além disso, o tratador global de erros transformava a falha de
+  validação em <code>500</code>. Corrigimos criando um schema de atualização e
+  mapeando erros de validação para <code>400</code>, com testes de regressão.</li>
+<li><strong>Paginação sem total de registros.</strong> A API devolve apenas a página
+  pedida. Em vez de alterar o contrato, o app infere a existência de uma
+  próxima página quando a atual vem cheia, aceitando a limitação de, no
+  caso extremo de o total ser múltiplo de 10, mostrar uma última página
+  vazia.</li>
+<li><strong>Sessão no dispositivo.</strong> O token fica no <code>expo-secure-store</code>, não em
+  armazenamento comum. Como o JWT só carrega <code>id</code> e <code>tipo</code>, o app decodifica
+  o payload localmente (com decodificador base64 próprio, por causa das
+  diferenças do Hermes) e verifica <code>exp</code> ao abrir o app, além de encerrar a
+  sessão ao receber 401. Consequência assumida: o nome do usuário logado não
+  é exibido, pois não vem no token.</li>
+<li><strong>Conectar o celular à API.</strong> O endereço <code>localhost</code> não funciona no
+  celular, e <code>10.0.2.2</code> só vale para o emulador Android; é preciso usar o IP
+  do computador na rede, liberar a porta no firewall e reiniciar o Expo com
+  cache limpo para ler o <code>.env</code>. Para facilitar o diagnóstico, a mensagem de
+  erro de rede passou a incluir a URL que o app tentou acessar.</li>
+<li><strong>Migração de <code>fetch</code> para Axios.</strong> O cliente HTTP inicial usava <code>fetch</code>.
+  Ao adotar Axios, como toda a comunicação estava concentrada em um único
+  arquivo, só ele precisou mudar (interceptors de token e de erro), e os
+  testes foram reescritos com um adaptador falso para continuar validando o
+  comportamento real dos interceptors.</li>
+<li><strong>Ferramentas de teste no React Native.</strong> O ambiente de testes exigiu
+  versões compatíveis (<code>react-test-renderer</code> alinhado ao React, API
+  assíncrona do Testing Library nas versões recentes, tipos do Jest
+  declarados explicitamente no <code>tsconfig</code>).</li>
+<li><strong>Identidade visual.</strong> O app abria direto na lista, sem nome nem logo.
+  Criamos uma marca simples (capelo de formatura), cabeçalho com nome do
+  app, banner de boas-vindas, ícones na barra inferior, ícone do aplicativo
+  e splash; e a aba de administração passou a aparecer somente para quem tem
+  permissão.</li>
+<li><strong>Separação em repositório próprio.</strong> O app foi isolado do monorepo. O
+  <code>.gitignore</code> padrão do Expo não ignorava o <code>.env</code>, o que violaria a regra
+  de nunca versionar configuração local; foi corrigido, e o CI passou a
+  cobrir o mobile.</li>
+</ul>
+<h2 id="6-video">6. Vídeo</h2>
+<p>&lt;COLOQUE-AQUI-O-LINK-DO-VIDEO&gt;</p>
+</main>
+<footer>Blogging Educacional · React Native (Expo + TypeScript)</footer>
+</body>
+</html>
