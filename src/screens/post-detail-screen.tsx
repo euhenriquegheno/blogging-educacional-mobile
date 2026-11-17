@@ -68,6 +68,7 @@ export function PostDetailScreen({ route, navigation }: RootScreenProps<'PostDet
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         <Text style={styles.title}>{p.titulo}</Text>
         <Text style={styles.author}>Por {p.usuario?.nome ?? 'autor desconhecido'}</Text>
+        {p.criadoEm ? <Text style={styles.muted}>{formatDate(p.criadoEm)}</Text> : null}
         <Text style={styles.body}>{p.conteudo}</Text>
 
         {canModifyPost(user, p) && (
