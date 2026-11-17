@@ -32,8 +32,11 @@ export function PostsListScreen({ navigation }: { navigation: any }) {
     [query, page],
   )
 
-  return (
-    <View style={styles.container}>
+  // Banner de boas-vindas + busca ficam no cabeçalho da lista (a busca abaixo do "Bem-vindo").
+  // Um único FlatList permanece montado para o campo de busca não perder o foco.
+  const header = (
+    <View>
+      {!query && page === 1 && <WelcomeBanner />}
       <View style={styles.searchBox}>
         <TextInput
           style={styles.search}
@@ -48,36 +51,47 @@ export function PostsListScreen({ navigation }: { navigation: any }) {
         />
         {canManage(user) && <Button title="Nova" small onPress={() => navigation.navigate('PostForm')} />}
       </View>
+    </View>
+  )
 
-      {error ? (
-        <ErrorState message={error} onRetry={reload} />
-      ) : loading && !data ? (
-        <Loading />
-      ) : (
-        <FlatList
-          data={data ?? []}
-          keyExtractor={(p) => p.id}
-          contentContainerStyle={styles.list}
-          ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
-          renderItem={({ item }) => (
-            <PostCard post={item} onPress={() => navigation.navigate('PostDetail', { id: item.id })} />
-          )}
-          ListHeaderComponent={!query && page === 1 ? <WelcomeBanner /> : undefined}
-          ListEmptyComponent={<EmptyState message={query ? 'Nenhuma postagem encontrada.' : 'Ainda não há postagens.'} />}
-          refreshing={loading}
-          onRefresh={reload}
-          ListFooterComponent={
-            !query ? <Pagination page={page} hasNext={(data?.length ?? 0) === PAGE_SIZE} onChange={setPage} /> : undefined
-          }
-        />
-      )}
+  const showState = !!error || (loading && !data)
+
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={showState ? [] : (data ?? [])}
+        keyExtractor={(p) => p.id}
+        contentContainerStyle={styles.list}
+        keyboardShouldPersistTaps="handled"
+        ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
+        renderItem={({ item }) => (
+          <PostCard post={item} onPress={() => navigation.navigate('PostDetail', { id: item.id })} />
+        )}
+        ListHeaderComponent={header}
+        ListEmptyComponent={
+          error ? (
+            <ErrorState message={error} onRetry={reload} />
+          ) : loading && !data ? (
+            <Loading />
+          ) : (
+            <EmptyState message={query ? 'Nenhuma postagem encontrada.' : 'Ainda não há postagens.'} />
+          )
+        }
+        refreshing={loading}
+        onRefresh={reload}
+        ListFooterComponent={
+          !query && !showState ? (
+            <Pagination page={page} hasNext={(data?.length ?? 0) === PAGE_SIZE} onChange={setPage} />
+          ) : undefined
+        }
+      />
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
-  searchBox: { flexDirection: 'row', gap: 8, padding: 16, paddingBottom: 4, alignItems: 'center' },
+  searchBox: { flexDirection: 'row', gap: 8, paddingBottom: 16, alignItems: 'center' },
   search: {
     flex: 1,
     backgroundColor: colors.surface,
