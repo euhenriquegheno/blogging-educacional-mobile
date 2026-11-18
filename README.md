@@ -73,7 +73,7 @@ O CI (`.github/workflows/ci.yml`) roda `typecheck`, os testes e gera o bundle An
 ├── App.tsx                          # Providers: SafeArea → Auth → Navigation
 ├── app.json                         # Nome, ícone, splash e plugins do Expo
 ├── assets/                          # Ícone, splash e favicon
-├── docs/                            # Documentação da entrega e roteiro do vídeo
+├── docs/                            # Documentação da entrega
 ├── .github/workflows/ci.yml         # CI
 └── src/
     ├── config/env.ts                # URL da API e tamanho de página
