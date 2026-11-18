@@ -17,7 +17,7 @@ React Native + Expo · TypeScript · React Navigation (abas + pilha) · Context 
 
 ## Como rodar
 
-**Pré-requisitos:** Node 20+, o **backend rodando** (siga o README do repositório do backend) e o app **Expo Go** no celular (ou um emulador Android/iOS).
+**Pré-requisitos:** Node 20+, o **backend rodando** (siga o README do repositório do backend: https://github.com/euhenriquegheno/blogging-educacional) e o app **Expo Go** no celular (ou um emulador Android/iOS).
 
 ```bash
 npm ci
