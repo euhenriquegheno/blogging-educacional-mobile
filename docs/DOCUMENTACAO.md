@@ -215,22 +215,21 @@ npm test
 
 ## 5. Relato de experiências e desafios
 
-> Este relato descreve os desafios técnicos encontrados durante o
-> desenvolvimento do app. A equipe deve complementá-lo com as próprias
-> impressões (divisão de tarefas, aprendizados pessoais).
+Relato dos desafios encontrados durante o desenvolvimento do app, que foi
+feito individualmente.
 
 - **A API não estava pronta para o mobile.** Ao mapear os requisitos contra
   os endpoints, apareceram lacunas: `/user` aceitava só Administrador (a
   atividade pede que professores cadastrem professores e alunos), a criação
   de postagem não recebia o autor e não havia filtro por tipo de usuário para
-  as listagens. Resolvemos no backend, com a regra "professor nunca
+  as listagens. Resolvi no backend, com a regra "professor nunca
   gerencia Administrador" nos **casos de uso**, e não só nas rotas, para que
   valesse para qualquer cliente.
 - **Edição de cadastro sem senha.** Salvar um professor sem preencher a
   senha retornava *Internal Server Error*. O controller já tratava a senha
   como opcional, mas o schema de validação do `PUT` era o mesmo do `POST` e a
   exigia; além disso, o tratador global de erros transformava a falha de
-  validação em `500`. Corrigimos criando um schema de atualização e
+  validação em `500`. Corrigi criando um schema de atualização e
   mapeando erros de validação para `400`, com testes de regressão.
 - **Paginação sem total de registros.** A API devolve apenas a página
   pedida. Em vez de alterar o contrato, o app infere a existência de uma
@@ -258,7 +257,7 @@ npm test
   assíncrona do Testing Library nas versões recentes, tipos do Jest
   declarados explicitamente no `tsconfig`).
 - **Identidade visual.** O app abria direto na lista, sem nome nem logo.
-  Criamos uma marca simples (capelo de formatura), cabeçalho com nome do
+  Criei uma marca simples (capelo de formatura), cabeçalho com nome do
   app, banner de boas-vindas, ícones na barra inferior, ícone do aplicativo
   e splash; e a aba de administração passou a aparecer somente para quem tem
   permissão.
@@ -269,4 +268,4 @@ npm test
 
 ## 6. Vídeo
 
-<COLOQUE-AQUI-O-LINK-DO-VIDEO>
+https://youtu.be/nk8FGUOsa2c

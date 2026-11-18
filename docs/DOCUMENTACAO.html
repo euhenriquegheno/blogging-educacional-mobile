@@ -327,24 +327,21 @@ professores ou administradores. O conteúdo das postagens é texto simples
 npm test
 </code></pre>
 <h2 id="5-relato-de-experiencias-e-desafios">5. Relato de experiências e desafios</h2>
-<blockquote>
-<p>Este relato descreve os desafios técnicos encontrados durante o
-desenvolvimento do app. A equipe deve complementá-lo com as próprias
-impressões (divisão de tarefas, aprendizados pessoais).</p>
-</blockquote>
+<p>Relato dos desafios encontrados durante o desenvolvimento do app, que foi
+feito individualmente.</p>
 <ul>
 <li><strong>A API não estava pronta para o mobile.</strong> Ao mapear os requisitos contra
   os endpoints, apareceram lacunas: <code>/user</code> aceitava só Administrador (a
   atividade pede que professores cadastrem professores e alunos), a criação
   de postagem não recebia o autor e não havia filtro por tipo de usuário para
-  as listagens. Resolvemos no backend, com a regra "professor nunca
+  as listagens. Resolvi no backend, com a regra "professor nunca
   gerencia Administrador" nos <strong>casos de uso</strong>, e não só nas rotas, para que
   valesse para qualquer cliente.</li>
 <li><strong>Edição de cadastro sem senha.</strong> Salvar um professor sem preencher a
   senha retornava <em>Internal Server Error</em>. O controller já tratava a senha
   como opcional, mas o schema de validação do <code>PUT</code> era o mesmo do <code>POST</code> e a
   exigia; além disso, o tratador global de erros transformava a falha de
-  validação em <code>500</code>. Corrigimos criando um schema de atualização e
+  validação em <code>500</code>. Corrigi criando um schema de atualização e
   mapeando erros de validação para <code>400</code>, com testes de regressão.</li>
 <li><strong>Paginação sem total de registros.</strong> A API devolve apenas a página
   pedida. Em vez de alterar o contrato, o app infere a existência de uma
@@ -372,7 +369,7 @@ impressões (divisão de tarefas, aprendizados pessoais).</p>
   assíncrona do Testing Library nas versões recentes, tipos do Jest
   declarados explicitamente no <code>tsconfig</code>).</li>
 <li><strong>Identidade visual.</strong> O app abria direto na lista, sem nome nem logo.
-  Criamos uma marca simples (capelo de formatura), cabeçalho com nome do
+  Criei uma marca simples (capelo de formatura), cabeçalho com nome do
   app, banner de boas-vindas, ícones na barra inferior, ícone do aplicativo
   e splash; e a aba de administração passou a aparecer somente para quem tem
   permissão.</li>
@@ -382,7 +379,7 @@ impressões (divisão de tarefas, aprendizados pessoais).</p>
   cobrir o mobile.</li>
 </ul>
 <h2 id="6-video">6. Vídeo</h2>
-<p>&lt;COLOQUE-AQUI-O-LINK-DO-VIDEO&gt;</p>
+<a href="https://youtu.be/nk8FGUOsa2c">Acessar video</a>
 </main>
 <footer>Blogging Educacional · React Native (Expo + TypeScript)</footer>
 </body>
